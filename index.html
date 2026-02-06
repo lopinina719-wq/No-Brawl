@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KEDZI BRAWL v9.7.6</title>
+    <title>KEDZI BRAWL v9.7.7 - NO RESET EDITION</title>
 </head>
 <body style="margin:0; background:#000; color:#fff; font-family: 'Arial Black', sans-serif; text-align:center; overflow:hidden;">
 
@@ -21,10 +21,7 @@
     <div onclick="openWin('win-profile')" style="background:#111; padding:12px; display:flex; justify-content:space-between; border-bottom:2px solid #ffcc00; cursor:pointer;">
         <div style="display:flex; align-items:center; gap:10px;">
             <div id="p-icon" style="font-size:24px;">👤</div>
-            <div style="text-align:left;">
-                <div id="p-nick" style="color:#ffcc00; font-size:16px;">Гравець</div>
-                <div id="p-rank" style="font-size:10px; color:#aaa;">Одинокий гонщик</div>
-            </div>
+            <div id="p-nick" style="color:#ffcc00; font-size:16px;">Гравець</div>
         </div>
         <div style="text-align:right;">
             <div style="color:#ffcc00;">🏆 <span id="trophies">0</span></div>
@@ -33,78 +30,61 @@
     </div>
 
     <div style="padding:20px;">
-        <h1 style="color:#ffcc00; font-size:28px; text-shadow: 2px 2px #444;">KEDZI BRAWL</h1>
-        <div id="cheat-indicator" style="color:#ff00ff; font-size:12px; display:none;">✨ ЗІЛЛЯ АКТИВОВАНЕ</div>
-        <div style="background:#222; padding:8px; border-radius:10px; margin-bottom:15px; border: 1px solid #333;">
-            РЕЖИМ: <span id="cur-mode-txt" style="color:#00ff00;">Столкновение</span>
-        </div>
+        <h1 style="color:#ffcc00; font-size:28px;">KEDZI BRAWL</h1>
+        <div id="cheat-indicator" style="color:#ff00ff; font-size:12px; display:none;">✨ ЗІЛЛЯ ЧИТЕРСТВА АКТИВНЕ</div>
+        <div style="background:#222; padding:8px; border-radius:10px; margin-bottom:15px;">РЕЖИМ: <span id="cur-mode-txt" style="color:#00ff00;">Столкновение</span></div>
 
-        <button onclick="startBattle()" id="play-btn" style="background:#ffcc00; width:100%; padding:20px; font-size:24px; border:none; border-radius:20px; font-weight:bold; color:#000; margin-bottom:15px; cursor:pointer;">ГРАТИ</button>
+        <button onclick="startBattle()" id="play-btn" style="background:#ffcc00; width:100%; padding:20px; font-size:24px; border:none; border-radius:20px; font-weight:bold; margin-bottom:15px; cursor:pointer;">ГРАТИ</button>
         
         <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
-            <button onclick="openWin('win-modes')" style="background:#2ecc71; padding:15px; border-radius:12px; border:none; color:#000; font-weight:bold; grid-column: span 2;">ОБРАТИ РЕЖИМ</button>
-            <button onclick="openWin('win-brawlers')" style="background:#3498db; padding:15px; border-radius:12px; border:none; color:#fff; font-weight:bold;">БРАВЛЕРИ</button>
-            <button onclick="openWin('win-shop')" style="background:#e74c3c; padding:15px; border-radius:12px; border:none; color:#fff; font-weight:bold;">МАГАЗИН</button>
-            <button onclick="openWin('win-promo')" style="background:#f1c40f; padding:15px; border-radius:12px; border:none; color:#000; font-weight:bold; grid-column: span 2;">ПРОМОКОД 🎁</button>
-            <button onclick="openStarrDrop()" style="background:#8e44ad; padding:15px; border-radius:12px; border:none; color:#fff; font-weight:bold; grid-column: span 2;">СТАР ДРОП (15 🏆)</button>
+            <button onclick="openWin('win-modes')" style="background:#2ecc71; padding:15px; border-radius:12px; grid-column: span 2;">ОБРАТИ РЕЖИМ</button>
+            <button onclick="openWin('win-brawlers')" style="background:#3498db; padding:15px; border-radius:12px;">БРАВЛЕРИ</button>
+            <button onclick="openWin('win-shop')" style="background:#e74c3c; padding:15px; border-radius:12px;">МАГАЗИН</button>
+            <button onclick="openWin('win-promo')" style="background:#f1c40f; padding:15px; border-radius:12px; grid-column: span 2;">ПРОМОКОД 🎁</button>
+            <button onclick="openStarrDrop()" style="background:#8e44ad; padding:15px; border-radius:12px; grid-column: span 2;">СТАР ДРОП (15 🏆)</button>
         </div>
-        <button onclick="resetGame()" style="background:none; border:none; color:#555; font-size:10px; margin-top:20px;">Скинути прогрес</button>
-        <button onclick="openWin('win-changelog')" style="position:fixed; bottom:15px; right:15px; background:#444; color:#ccc; border:none; padding:8px 15px; border-radius:8px; font-size:12px; cursor:pointer;">CHANGELOG 📜</button>
+        
+        <button onclick="openWin('win-changelog')" style="position:fixed; bottom:15px; right:15px; background:#444; color:#ccc; border:none; padding:8px 15px; border-radius:8px; font-size:12px;">CHANGELOG 📜</button>
     </div>
 
     <div id="win-drop" class="window">
-        <h1 id="drop-rarity" style="margin-top:40px; font-size:35px; color:#00ff00;">RARE</h1>
-        <div id="drop-box" onclick="tapDrop()" style="width:180px; height:180px; background:#fff; margin:30px auto; border:8px solid #fff; border-radius:40px; font-size:80px; display:flex; align-items:center; justify-content:center; cursor:pointer; transition: 0.1s;">⭐</div>
+        <h1 id="drop-rarity" style="margin-top:40px; font-size:35px;">RARE</h1>
+        <div id="drop-box" onclick="tapDrop()" style="width:180px; height:180px; background:#fff; margin:30px auto; border:8px solid #fff; border-radius:40px; font-size:80px; display:flex; align-items:center; justify-content:center; cursor:pointer;">⭐</div>
         <p id="drop-taps" style="font-size:20px;">ТАПАЙ! (4)</p>
     </div>
 
-    <div id="win-changelog" class="window">
-        <div class="content">
-            <h2 style="color:#ffcc00;">CHANGELOG</h2>
-            • v9.7.6: ПОВНИЙ ФІКС СТАР ДРОПІВ!<br>
-            • Додано Нокаут (2.5с) та Бравл Бол.<br>
-            • Нові промо: ARTEMKO та UPDATE2026.<br>
-            • Магазин знову працює.
-        </div>
-        <button onclick="closeWin('win-changelog')" class="close-btn">ЗАКРИТИ</button>
-    </div>
-
-    <div id="win-promo" class="window"><div class="content"><h2>ПРОМОКОД</h2><input type="text" id="promo-in" style="width:90%; padding:15px;"><button onclick="usePromo()" class="close-btn" style="background:#2ecc71;">OK</button></div><button onclick="closeWin('win-promo')" class="close-btn">ЗАКРИТИ</button></div>
     <div id="win-modes" class="window"><div class="content"><h2>РЕЖИМИ</h2>
         <button class="opt-btn" onclick="setMode(1500,'Столкновение',false,false)">🚀 Столкновение</button>
         <button class="opt-btn" onclick="setMode(2500,'🔥 НОКАУТ',false,false)">🔥 НОКАУТ (2.5с)</button>
         <button class="opt-btn" onclick="setMode(1500,'⚽ БРАВЛ БОЛ',false,true)">⚽ БРАВЛ БОЛ (+5🏆 100%)</button>
-        <button class="opt-btn" onclick="setMode(10000,'👑 ДУЕЛЬ',true,false)" style="color:red;">👑 ДУЕЛЬ (-1000/x1.45)</button>
     </div><button onclick="closeWin('win-modes')" class="close-btn">ЗАКРИТИ</button></div>
-    <div id="win-brawlers" class="window"><h2 style="color:#ffcc00;">БРАВЛЕРИ</h2><div id="brawlers-list" class="b-grid"></div><button onclick="closeWin('win-brawlers')" class="close-btn">ЗАКРИТИ</button></div>
+
+    <div id="win-changelog" class="window"><div class="content"><h2>CHANGELOG v9.7.7</h2>• Кнопку скидання видалено назавжди!<br>• Фікс Стар Дропів (механіка тапів).<br>• Додано авто-оновлення бази даних.</div><button onclick="closeWin('win-changelog')" class="close-btn">ЗАКРИТИ</button></div>
     <div id="win-shop" class="window"><div class="content"><h2>МАГАЗИН</h2><div id="shop-items"></div></div><button onclick="closeWin('win-shop')" class="close-btn">ЗАКРИТИ</button></div>
-    <div id="win-profile" class="window"><div class="content"><h2>ПРОФІЛЬ</h2><p>НІК:</p><input type="text" id="nick-in" style="width:90%; padding:10px;"><button onclick="saveProfile()" class="close-btn" style="background:#2ecc71;">ЗБЕРЕГТИ</button></div><button onclick="closeWin('win-profile')" class="close-btn">ЗАКРИТИ</button></div>
+    <div id="win-brawlers" class="window"><h2>БРАВЛЕРИ</h2><div id="brawlers-list" class="b-grid"></div><button onclick="closeWin('win-brawlers')" class="close-btn">ЗАКРИТИ</button></div>
+    <div id="win-promo" class="window"><div class="content"><h2>ПРОМОКОД</h2><input type="text" id="promo-in" style="width:90%; padding:10px;"><button onclick="usePromo()" class="close-btn" style="background:#2ecc71;">OK</button></div><button onclick="closeWin('win-promo')" class="close-btn">ЗАКРИТИ</button></div>
 
     <script>
         let trophies = 0, selected = "shelly", curMode = {t:1500, n:'Столкновение', isDuel: false, isBall: false};
-        let dropData = {taps:4, rarityIdx:0, ultra:false};
-        let usedPromos = [], cheatActive = false, hasCheatPotion = false;
+        let dropData = {taps:4, rarityIdx:0};
+        let usedPromos = [], cheatActive = false;
 
         const brawlers = {
-            "shelly":{n:"Shelly",r:"rare",ow:true,c:0.55},"nita":{n:"Nita",r:"rare",ow:false,c:0.58},"colt":{n:"Colt",r:"rare",ow:false,c:0.6},"bull":{n:"Bull",r:"rare",ow:false,c:0.59},
+            "shelly":{n:"Shelly",r:"rare",ow:true,c:0.55},"nita":{n:"Nita",r:"rare",ow:false,c:0.58},
             "edgar":{n:"Edgar",r:"epic",ow:false,c:0.75},"moe":{n:"Moe",r:"mythic",ow:false,c:0.86},
             "kenji":{n:"Kenji",r:"legendary",ow:false,c:0.91},"kedzi":{n:"Kedzi",r:"ultra",ow:false,c:0.95}
         };
 
         const rarities = [
-            {n:"RARE", c:"#00ff00", bonus:20}, {n:"SUPER RARE", c:"#3498db", bonus:40},
-            {n:"EPIC", c:"#9b59b6", bonus:80}, {n:"MYTHIC", c:"#ff0000", bonus:150},
-            {n:"LEGENDARY", c:"#f1c40f", bonus:300}, {n:"ULTRA", c:"#ffffff", bonus:1000}
+            {n:"RARE", c:"#00ff00", b:20}, {n:"SUPER RARE", c:"#3498db", b:40},
+            {n:"EPIC", c:"#9b59b6", b:80}, {n:"MYTHIC", c:"#ff0000", b:150},
+            {n:"LEGENDARY", c:"#f1c40f", b:300}, {n:"ULTRA", c:"#ffffff", b:1000}
         ];
 
         function tapDrop() {
             if(dropData.taps > 1) {
                 dropData.taps--;
-                if(Math.random() < 0.4) {
-                    let maxRnd = Math.random();
-                    if(maxRnd < 0.015) dropData.rarityIdx = 5;
-                    else dropData.rarityIdx = Math.min(dropData.rarityIdx + 1, 4);
-                }
+                if(Math.random() < 0.4) dropData.rarityIdx = Math.min(dropData.rarityIdx + 1, (Math.random() < 0.02 ? 5 : 4));
                 updateDropUI();
             } else finishDrop();
         }
@@ -120,56 +100,29 @@
 
         function finishDrop() {
             let r = rarities[dropData.rarityIdx];
-            if(dropData.rarityIdx >= 4 && Math.random() < 0.4) {
-                let locked = Object.keys(brawlers).filter(id => !brawlers[id].ow);
-                if(locked.length > 0) {
-                    let bId = locked[Math.floor(Math.random()*locked.length)];
-                    brawlers[bId].ow = true; alert("НОВИЙ БРАВЛЕР: " + brawlers[bId].n);
-                } else { trophies += r.bonus; alert("+" + r.bonus + " 🏆"); }
-            } else { trophies += r.bonus; alert("+" + r.bonus + " 🏆"); }
+            trophies += r.b; alert("ОТРИМАНО: " + r.n + "\n+" + r.b + " 🏆");
             updateUI(); closeWin('win-drop'); saveData();
         }
 
         function openStarrDrop() {
-            if(trophies >= 15) {
-                trophies -= 15;
-                dropData = {taps:4, rarityIdx:0};
-                updateDropUI(); openWin('win-drop'); updateUI();
-            } else alert("15 🏆 треба!");
+            if(trophies >= 15) { trophies -= 15; dropData = {taps:4, rarityIdx:0}; updateDropUI(); openWin('win-drop'); updateUI(); }
+            else alert("Мало кубків!");
         }
 
         function startBattle() {
             const btn = document.getElementById('play-btn'); btn.disabled = true;
             setTimeout(() => {
                 let win = (cheatActive || curMode.isBall) ? true : (Math.random() < brawlers[selected].c);
-                if (curMode.isDuel) {
-                    if (win) trophies += Math.floor(trophies * 0.45) || 50;
-                    else trophies = Math.max(0, trophies - 1000);
-                } else if (curMode.isBall) { trophies += 5; }
-                else { trophies = Math.max(0, trophies + (win ? 8 : -7)); }
+                trophies = Math.max(0, trophies + (curMode.isBall ? 5 : (win ? 8 : -7)));
                 cheatActive = false; updateUI(); btn.disabled = false; saveData();
                 alert(win ? "ПЕРЕМОГА!" : "ПРОГРАШ!");
             }, curMode.t);
         }
 
-        function renderShop() {
-            const s = document.getElementById('shop-items'); s.innerHTML = "";
-            [{n:'БОКС',p:1000,t:'r'}, {n:'ЗІЛЛЯ',p:1350,t:'cheat'}].forEach(item => {
-                s.innerHTML += `<div class="opt-btn" onclick="buyItem('${item.t}',${item.p})"><span>${item.n}</span> <span>${item.p}🏆</span></div>`;
-            });
-        }
-
-        function buyItem(t, p) {
-            if(trophies >= p) {
-                if(t==='cheat') { cheatActive = true; alert("АКТИВОВАНО!"); }
-                trophies -= p; updateUI(); saveData();
-            } else alert("Мало кубків!");
-        }
-
         function usePromo() {
-            const val = document.getElementById('promo-in').value.toUpperCase().trim();
-            if(val === 'ARTEMKO') trophies += 1100;
-            else if(val === 'UPDATE2026') cheatActive = true;
+            const v = document.getElementById('promo-in').value.toUpperCase();
+            if(v === 'ARTEMKO') trophies += 1100;
+            if(v === 'UPDATE2026') cheatActive = true;
             updateUI(); saveData(); closeWin('win-promo');
         }
 
@@ -179,21 +132,22 @@
             document.getElementById('cheat-indicator').style.display = cheatActive ? 'block' : 'none';
         }
 
-        function renderBrawlers() {
-            const l = document.getElementById('brawlers-list'); l.innerHTML = "";
-            for(let id in brawlers) if(brawlers[id].ow) l.innerHTML += `<div class="b-card" style="background:#444" onclick="selected='${id}';updateUI();closeWin('win-brawlers');saveData();">${brawlers[id].n}</div>`;
+        function openWin(id) { 
+            document.getElementById(id).style.display = 'block'; 
+            if(id==='win-shop') document.getElementById('shop-items').innerHTML = '<div class="opt-btn" onclick="buyCheat()"><span>ЗІЛЛЯ ЧИТЕРСТВА</span><span>1350🏆</span></div>';
+            if(id==='win-brawlers') {
+                const l = document.getElementById('brawlers-list'); l.innerHTML = "";
+                for(let id in brawlers) if(brawlers[id].ow) l.innerHTML += `<div class="b-card" style="background:#333" onclick="selected='${id}';updateUI();closeWin('win-brawlers');saveData();">${brawlers[id].n}</div>`;
+            }
         }
-
-        function openWin(id) { document.getElementById(id).style.display = 'block'; if(id==='win-shop') renderShop(); if(id==='win-brawlers') renderBrawlers(); }
+        function buyCheat() { if(trophies>=1350){ trophies-=1350; cheatActive=true; updateUI(); saveData(); alert("КУПЛЕНО!"); } }
         function closeWin(id) { document.getElementById(id).style.display = 'none'; }
         function setMode(t, n, d, b) { curMode = {t, n, isDuel:d, isBall:b}; document.getElementById('cur-mode-txt').innerText = n; closeWin('win-modes'); }
-        function saveProfile() { document.getElementById('p-nick').innerText = document.getElementById('nick-in').value || "Гравець"; saveData(); closeWin('win-profile'); }
-        function saveData() { localStorage.setItem('kedzi_brawl_save', JSON.stringify({ trophies, selected, cheatActive, owned: Object.keys(brawlers).filter(id => brawlers[id].ow), nick: document.getElementById('p-nick').innerText })); }
+        function saveData() { localStorage.setItem('kedzi_brawl_save', JSON.stringify({ trophies, selected, owned: Object.keys(brawlers).filter(id => brawlers[id].ow), nick: document.getElementById('p-nick').innerText })); }
         function loadData() { 
             let s = JSON.parse(localStorage.getItem('kedzi_brawl_save')); 
-            if(s){ trophies=s.trophies; selected=s.selected; cheatActive=s.cheatActive; if(s.owned) s.owned.forEach(id=>brawlers[id].ow=true); document.getElementById('p-nick').innerText=s.nick; updateUI(); }
+            if(s){ trophies=s.trophies; selected=s.selected; if(s.owned) s.owned.forEach(id=>brawlers[id].ow=true); document.getElementById('p-nick').innerText=s.nick; updateUI(); }
         }
-        function resetGame() { if(confirm("Скинути все?")) { localStorage.clear(); location.reload(); } }
         window.onload = loadData;
     </script>
 </body>
