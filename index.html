@@ -33,6 +33,7 @@
             <button onclick="openWin('win-modes')" style="background:#2ecc71; padding:15px; border-radius:12px; border:none; color:#000; font-weight:bold; grid-column: span 2;">ОБРАТИ РЕЖИМ</button>
             <button onclick="openWin('win-brawlers')" style="background:#3498db; padding:15px; border-radius:12px; border:none; color:#fff; font-weight:bold;">БРАВЛЕРИ</button>
             <button onclick="openWin('win-shop')" style="background:#e74c3c; padding:15px; border-radius:12px; border:none; color:#fff; font-weight:bold;">МАГАЗИН</button>
+            <button onclick="openWin('win-promo')" style="background:#f1c40f; padding:15px; border-radius:12px; border:none; color:#000; font-weight:bold; grid-column: span 2;">ПРОМОКОД 🎁</button>
             <button onclick="openStarrDrop()" style="background:#8e44ad; padding:15px; border-radius:12px; border:none; color:#fff; font-weight:bold; grid-column: span 2;">СТАР ДРОП (15 🏆)</button>
         </div>
     </div>
@@ -45,6 +46,15 @@
         .b-grid { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; }
         .b-card { padding:10px; border-radius:8px; text-align:center; font-size:10px; font-weight:bold; cursor:pointer; border:1px solid rgba(255,255,255,0.1); }
     </style>
+
+    <div id="win-promo" class="window">
+        <div class="content">
+            <h2>ВВЕДИ ПРОМОКОД</h2>
+            <input type="text" id="promo-in" placeholder="КОД..." style="width:90%; padding:15px; background:#333; color:#ffcc00; border:2px solid #ffcc00; border-radius:12px; font-size:18px; font-weight:bold; text-transform:uppercase;">
+            <button onclick="usePromo()" class="close-btn" style="background:#2ecc71; margin-top:20px;">АКТИВУВАТИ</button>
+        </div>
+        <button onclick="closeWin('win-promo')" class="close-btn">ЗАКРИТИ</button>
+    </div>
 
     <div id="win-modes" class="window"><div class="content"><h2>РЕЖИМИ</h2>
         <button class="opt-btn" onclick="setMode(1500,'Столкновение',false)">🚀 Столкновение</button>
@@ -79,17 +89,11 @@
         let myRanks = ["Одинокий гонщик"], myIcons = ["👤"], curIcon = "👤";
 
         const brawlers = {
-            // Rare (Зелені)
             "shelly":{n:"Shelly",r:"rare",ow:true,c:0.55},"nita":{n:"Nita",r:"rare",ow:false,c:0.58},"colt":{n:"Colt",r:"rare",ow:false,c:0.6},"bull":{n:"Bull",r:"rare",ow:false,c:0.59},"brock":{n:"Brock",r:"rare",ow:false,c:0.6},
-            // Super Rare (Сині)
             "jessie":{n:"Jessie",r:"super_rare",ow:false,c:0.63},"dynamike":{n:"Dynamike",r:"super_rare",ow:false,c:0.65},"rico":{n:"Rico",r:"super_rare",ow:false,c:0.65},
-            // Epic (Фіолетові)
             "edgar":{n:"Edgar",r:"epic",ow:false,c:0.75},"angelo":{n:"Angelo",r:"epic",ow:false,c:0.76},"berry":{n:"Berry",r:"epic",ow:false,c:0.75},"piper":{n:"Piper",r:"epic",ow:false,c:0.72},
-            // Mythic (Червоні)
             "moe":{n:"Moe",r:"mythic",ow:false,c:0.86},"clancy":{n:"Clancy",r:"mythic",ow:false,c:0.87},"mortis":{n:"Mortis",r:"mythic",ow:false,c:0.78},"max":{n:"Max",r:"mythic",ow:false,c:0.82},
-            // Legendary (Жовті)
             "kenji":{n:"Kenji",r:"legendary",ow:false,c:0.91},"kit":{n:"Kit",r:"legendary",ow:false,c:0.9},"draco":{n:"Draco",r:"legendary",ow:false,c:0.9},"spike":{n:"Spike",r:"legendary",ow:false,c:0.88},"crow":{n:"Crow",r:"legendary",ow:false,c:0.88},
-            // Ultra
             "kedzi":{n:"Kedzi",r:"ultra",ow:false,c:0.95}
         };
 
@@ -98,6 +102,20 @@
             {n:"EPIC",c:"#9b59b6",r:20,id:"epic"}, {n:"MYTHIC",c:"#ff0000",r:50,id:"mythic"},
             {n:"LEGENDARY",c:"#f1c40f",r:100,id:"legendary"}, {n:"ULTRA",c:"#ff0000",r:500,id:"ultra"}
         ];
+
+        function usePromo() {
+            const val = document.getElementById('promo-in').value.toUpperCase();
+            if(val === 'ALPHATEST') {
+                trophies += 1000; alert("🚀 ALPHA TEST: +1000 🏆");
+            } else if(val === 'ARTEMKO') {
+                trophies += 1100; alert("👑 ARTEMKO: +1100 🏆");
+            } else {
+                alert("❌ НЕВІРНИЙ КОД");
+            }
+            document.getElementById('trophies').innerText = trophies;
+            document.getElementById('promo-in').value = "";
+            closeWin('win-promo');
+        }
 
         function openWin(id) { 
             document.getElementById(id).style.display = 'block'; 
@@ -155,7 +173,6 @@
         function finishDrop() {
             const r = rarities[dropData.rarity];
             let won = null;
-            // ЛОГІКА: Випадає бравлер ТІЛЬКИ цієї рідкості
             let pool = Object.keys(brawlers).filter(id => brawlers[id].r === r.id && !brawlers[id].ow);
             
             if(pool.length > 0 && Math.random() < 0.4) {
