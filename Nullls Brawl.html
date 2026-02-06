@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEDZI BRAWL MOD MENU</title>
+</head>
+<body style="margin:0; background:radial-gradient(circle, #200, #000); color:#fff; font-family: 'Arial Black', sans-serif; text-align:center; overflow:hidden;">
+
+    <div onclick="openWin('win-profile')" style="background:rgba(255, 204, 0, 0.1); padding:12px; display:flex; justify-content:space-between; border-bottom:3px solid #ff0000; cursor:pointer; text-shadow: 0 0 5px red;">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div id="p-icon" style="font-size:24px;">👑</div>
+            <div style="text-align:left;">
+                <div id="p-nick" style="color:#ff0000; font-size:16px;">ADMIN_KEDZI</div>
+                <div id="p-rank" style="font-size:10px; color:#ffcc00;">MASTER LEGEND [MOD]</div>
+            </div>
+        </div>
+        <div style="text-align:right;">
+            <div style="color:#ffcc00; font-size:20px;">🏆 <span id="trophies">999999</span></div>
+            <div id="selected-name" style="font-size:10px; color:#ff0000;">KEDZI [ULTRA]</div>
+        </div>
+    </div>
+
+    <div style="padding:20px;">
+        <h1 style="color:#ff0000; font-size:35px; text-shadow: 0 0 15px #ff0000;">MODDED EDITION</h1>
+        <div style="background:rgba(255,255,255,0.1); padding:8px; border-radius:10px; margin-bottom:15px; border: 1px solid red;">
+            РЕЖИМ: <span id="cur-mode-txt" style="color:#ffcc00;">ULTRA HACK</span>
+        </div>
+
+        <button onclick="startBattle()" id="play-btn" style="background:#ff0000; width:100%; padding:25px; font-size:28px; border:none; border-radius:20px; font-weight:bold; color:#fff; margin-bottom:15px; cursor:pointer; box-shadow: 0 0 20px #ff0000;">АВТО-ВИН (+1000 🏆)</button>
+        
+        <div style="display:grid; grid-template-columns: 1fr; gap:10px;">
+            <button onclick="openWin('win-brawlers')" style="background:#3498db; padding:15px; border-radius:12px; border:none; color:#fff; font-weight:bold;">ВСІ БРАВЛЕРИ (ВІДКРИТО)</button>
+            <button onclick="openStarrDrop()" style="background:linear-gradient(45deg, #ff0000, #8e44ad); padding:20px; border-radius:12px; border:none; color:#fff; font-weight:bold; font-size:20px; box-shadow: 0 0 15px #8e44ad;">ULTRA STARR DROP (+10K)</button>
+            <button onclick="location.reload()" style="background:#333; padding:10px; border-radius:12px; border:none; color:#aaa; font-size:12px;">Скинути все</button>
+        </div>
+    </div>
+
+    <style>
+        .window { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.95); z-index:100; padding:15px; overflow-y:auto; }
+        .content { background:#111; padding:15px; border-radius:20px; border:2px solid red; text-align:left; }
+        .close-btn { background:#ff0000; color:white; border:none; padding:15px; width:100%; border-radius:12px; margin-top:10px; font-weight:bold; cursor:pointer; }
+        .b-grid { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; }
+        .b-card { padding:10px; border-radius:8px; text-align:center; font-size:10px; font-weight:bold; border:1px solid rgba(255,0,0,0.3); }
+    </style>
+
+    <div id="win-brawlers" class="window">
+        <h2 style="color:#ff0000;">ВСІ БРАВЛЕРИ РОЗБЛОКОВАНІ</h2>
+        <div id="brawlers-list" class="b-grid"></div>
+        <button onclick="closeWin('win-brawlers')" class="close-btn">ЗАКРИТИ</button>
+    </div>
+
+    <div id="win-profile" class="window"><div class="content"><h2>PROFILE MOD</h2><p>НІК:</p><input type="text" id="nick-in" value="ADMIN_KEDZI" style="width:90%; padding:10px; background:#222; color:red; border:1px solid red;"><p>ЗВАННЯ ТА ІКОНКИ ВЖЕ МАКСИМАЛЬНІ</p><button onclick="saveProfile()" class="close-btn">OK</button></div></div>
+
+    <div id="win-drop" class="window">
+        <h1 style="color:#ff0000; margin-top:40px; font-size:40px; text-shadow: 0 0 20px red;">ULTRA DROP</h1>
+        <div id="drop-box" onclick="tapDrop()" style="width:200px; height:200px; background:linear-gradient(45deg, #f00, #400); margin:30px auto; border:8px solid gold; border-radius:50%; font-size:100px; display:flex; align-items:center; justify-content:center; cursor:pointer; box-shadow: 0 0 50px red;">💎</div>
+        <p style="font-size:20px; color:gold;">ТАПАЙ ДЛЯ ОТРИМАННЯ 10,000 🏆</p>
+    </div>
+
+    <script>
+        let trophies = 999999, selected = "kedzi";
+        const brawlers = {
+            "kedzi":{n:"KEDZI MOD",r:"ultra"}, "kenji":{n:"Kenji",r:"legendary"}, "moe":{n:"Moe",r:"mythic"}, 
+            "clancy":{n:"Clancy",r:"mythic"}, "juju":{n:"Juju",r:"mythic"}, "draco":{n:"Draco",r:"legendary"},
+            "kit":{n:"Kit",r:"legendary"}, "shelly":{n:"Shelly",r:"rare"}, "colt":{n:"Colt",r:"rare"},
+            "mortis":{n:"Mortis",r:"mythic"}, "spike":{n:"Spike",r:"legendary"}, "crow":{n:"Crow",r:"legendary"},
+            "leon":{n:"Leon",r:"legendary"}, "edgar":{n:"Edgar",r:"epic"}, "fang":{n:"Fang",r:"mythic"}
+        };
+
+        function openWin(id) { 
+            document.getElementById(id).style.display = 'block'; 
+            if(id==='win-brawlers') renderBrawlers();
+        }
+        function closeWin(id) { document.getElementById(id).style.display = 'none'; }
+
+        function startBattle() {
+            const btn = document.getElementById('play-btn'); btn.disabled = true;
+            btn.innerText = "ВЗЛАМУЮ ГРУ... 🔥";
+            setTimeout(() => {
+                trophies += 1000;
+                document.getElementById('trophies').innerText = trophies;
+                alert("ПЕРЕМОГА! +1000 🏆 (MOD ACTIVE)");
+                btn.disabled = false; btn.innerText = "АВТО-ВИН (+1000 🏆)";
+            }, 500);
+        }
+
+        function openStarrDrop() {
+            openWin('win-drop');
+        }
+
+        function tapDrop() {
+            trophies += 10000;
+            document.getElementById('trophies').innerText = trophies;
+            alert("ULTRA WIN! +10,000 🏆");
+            closeWin('win-drop');
+        }
+
+        function renderBrawlers() {
+            const l = document.getElementById('brawlers-list'); l.innerHTML = "";
+            const colors = {rare:"#00ff00", super_rare:"#3498db", epic:"#9b59b6", mythic:"#ff0000", legendary:"#f1c40f", ultra:"#ff0000"};
+            for(let id in brawlers) {
+                l.innerHTML += `<div class="b-card" style="background:${colors[brawlers[id].r]}" onclick="selected='${id}';closeWin('win-brawlers')">${brawlers[id].n}</div>`;
+            }
+        }
+
+        function saveProfile() {
+            document.getElementById('p-nick').innerText = document.getElementById('nick-in').value;
+            closeWin('win-profile');
+        }
+
+        // Ініціалізація
+        document.getElementById('trophies').innerText = trophies;
+    </script>
+</body>
+</html>
