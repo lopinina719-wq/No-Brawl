@@ -36,6 +36,7 @@
             <button onclick="openWin('win-promo')" style="background:#f1c40f; padding:15px; border-radius:12px; border:none; color:#000; font-weight:bold; grid-column: span 2;">ПРОМОКОД 🎁</button>
             <button onclick="openStarrDrop()" style="background:#8e44ad; padding:15px; border-radius:12px; border:none; color:#fff; font-weight:bold; grid-column: span 2;">СТАР ДРОП (15 🏆)</button>
         </div>
+        <button onclick="resetGame()" style="background:none; border:none; color:#555; font-size:10px; margin-top:20px;">Скинути прогрес</button>
     </div>
 
     <style>
@@ -84,9 +85,11 @@
     </div>
 
     <script>
+        // ДАНІ ГРИ
         let trophies = 0, selected = "shelly", curMode = {t:1500, n:'Столкновение', isDuel: false};
         let dropData = {taps:0, rarity:0, ultra:false};
         let myRanks = ["Одинокий гонщик"], myIcons = ["👤"], curIcon = "👤";
+        let usedPromos = []; 
 
         const brawlers = {
             "shelly":{n:"Shelly",r:"rare",ow:true,c:0.55},"nita":{n:"Nita",r:"rare",ow:false,c:0.58},"colt":{n:"Colt",r:"rare",ow:false,c:0.6},"bull":{n:"Bull",r:"rare",ow:false,c:0.59},"brock":{n:"Brock",r:"rare",ow:false,c:0.6},
@@ -103,17 +106,51 @@
             {n:"LEGENDARY",c:"#f1c40f",r:100,id:"legendary"}, {n:"ULTRA",c:"#ff0000",r:500,id:"ultra"}
         ];
 
+        // ФУНКЦІЇ ЗБЕРЕЖЕННЯ
+        function saveData() {
+            const ownedBrawlers = Object.keys(brawlers).filter(id => brawlers[id].ow);
+            const data = { trophies, ownedBrawlers, usedPromos, curIcon, nick: document.getElementById('p-nick').innerText };
+            localStorage.setItem('kedzi_brawl_save', JSON.stringify(data));
+        }
+
+        function loadData() {
+            const saved = localStorage.getItem('kedzi_brawl_save');
+            if (saved) {
+                const data = JSON.parse(saved);
+                trophies = data.trophies || 0;
+                usedPromos = data.usedPromos || [];
+                curIcon = data.curIcon || "👤";
+                document.getElementById('p-nick').innerText = data.nick || "Гравець";
+                document.getElementById('p-icon').innerText = curIcon;
+                if (data.ownedBrawlers) {
+                    data.ownedBrawlers.forEach(id => { if(brawlers[id]) brawlers[id].ow = true; });
+                }
+                document.getElementById('trophies').innerText = trophies;
+            }
+        }
+
+        function resetGame() {
+            if(confirm("Скинути весь прогрес?")) {
+                localStorage.removeItem('kedzi_brawl_save');
+                location.reload();
+            }
+        }
+
+        // ПРОМОКОДИ
         function usePromo() {
             const val = document.getElementById('promo-in').value.toUpperCase();
+            if (usedPromos.includes(val)) return alert("❌ ВЖЕ ВИКОРИСТАНО!");
+
             if(val === 'ALPHATEST') {
-                trophies += 1000; alert("🚀 ALPHA TEST: +1000 🏆");
+                trophies += 1000; usedPromos.push(val); alert("🚀 +1000 🏆");
             } else if(val === 'ARTEMKO') {
-                trophies += 1100; alert("👑 ARTEMKO: +1100 🏆");
+                trophies += 1100; usedPromos.push(val); alert("👑 +1100 🏆");
             } else {
-                alert("❌ НЕВІРНИЙ КОД");
+                return alert("❌ НЕВІРНИЙ КОД");
             }
             document.getElementById('trophies').innerText = trophies;
             document.getElementById('promo-in').value = "";
+            saveData();
             closeWin('win-promo');
         }
 
@@ -145,6 +182,7 @@
                 }
                 document.getElementById('trophies').innerText = trophies;
                 btn.disabled = false; btn.innerText = "ГРАТИ";
+                saveData();
             }, curMode.t);
         }
 
@@ -152,6 +190,7 @@
             if(trophies<15) return alert("Треба 15🏆");
             trophies-=15; document.getElementById('trophies').innerText = trophies;
             dropData = {taps:4, rarity:0, ultra:false}; updateDropUI(); openWin('win-drop');
+            saveData();
         }
 
         function tapDrop() {
@@ -172,16 +211,16 @@
 
         function finishDrop() {
             const r = rarities[dropData.rarity];
-            let won = null;
             let pool = Object.keys(brawlers).filter(id => brawlers[id].r === r.id && !brawlers[id].ow);
-            
             if(pool.length > 0 && Math.random() < 0.4) {
-                won = pool[Math.floor(Math.random()*pool.length)];
+                let won = pool[Math.floor(Math.random()*pool.length)];
                 brawlers[won].ow = true; alert("НОВИЙ БРАВЛЕР: " + brawlers[won].n);
             } else {
                 trophies += r.r; alert(r.n + "! +" + r.r + " 🏆");
             }
-            document.getElementById('trophies').innerText = trophies; closeWin('win-drop');
+            document.getElementById('trophies').innerText = trophies; 
+            saveData();
+            closeWin('win-drop');
         }
 
         function renderShop() {
@@ -199,18 +238,20 @@
                     if(pool.length>0) { let b=pool[0]; brawlers[b].ow=true; alert("ЛЕГЕНДА: "+brawlers[b].n); }
                 } else { myIcons.push(n); }
                 document.getElementById('trophies').innerText = trophies;
+                saveData();
             } else alert("Мало кубків!");
         }
 
         function renderProfileOptions() {
             const rIn = document.getElementById('rank-in'); rIn.innerHTML = "<option>Новачок</option><option>LEGEND</option>";
             const iL = document.getElementById('icons-list'); iL.innerHTML = "";
-            myIcons.forEach(i => iL.innerHTML += `<span onclick="curIcon='${i}'" style="font-size:30px; cursor:pointer;">${i}</span>`);
+            myIcons.forEach(i => iL.innerHTML += `<span onclick="curIcon='${i}';saveData()" style="font-size:30px; cursor:pointer;">${i}</span>`);
         }
 
         function saveProfile() {
             document.getElementById('p-nick').innerText = document.getElementById('nick-in').value || "Гравець";
             document.getElementById('p-icon').innerText = curIcon;
+            saveData();
             closeWin('win-profile');
         }
 
@@ -225,6 +266,9 @@
             }
             document.getElementById('b-count').innerText = count;
         }
+
+        // ЗАВАНТАЖЕННЯ ПРИ СТАРТІ
+        window.onload = loadData;
     </script>
 </body>
 </html>
