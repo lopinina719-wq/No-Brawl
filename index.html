@@ -3,9 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>KEDZI BRAWL v8.0</title>
+    <title>KEDZI BRAWL v9.5</title>
 </head>
 <body style="margin:0; background:#000; color:#fff; font-family: 'Arial Black', sans-serif; text-align:center; overflow:hidden;">
+
+    <style>
+        @keyframes rainbow {
+            0% { background: #ff0000; }
+            20% { background: #ffcc00; }
+            40% { background: #00ff00; }
+            60% { background: #00ffff; }
+            80% { background: #0000ff; }
+            100% { background: #ff00ff; }
+        }
+        .rainbow-bg { animation: rainbow 2s infinite linear !important; color: #fff; text-shadow: 1px 1px #000; }
+    </style>
 
     <div onclick="openWin('win-profile')" style="background:#111; padding:12px; display:flex; justify-content:space-between; border-bottom:2px solid #ffcc00; cursor:pointer;">
         <div style="display:flex; align-items:center; gap:10px;">
@@ -22,7 +34,7 @@
     </div>
 
     <div style="padding:20px;">
-        <h1 style="color:#ffcc00; font-size:28px; text-shadow: 2px 2px #444;">KEDZI BRAWL v8</h1>
+        <h1 style="color:#ffcc00; font-size:28px; text-shadow: 2px 2px #444;">KEDZI BRAWL</h1>
         <div style="background:#222; padding:8px; border-radius:10px; margin-bottom:15px; border: 1px solid #333;">
             РЕЖИМ: <span id="cur-mode-txt" style="color:#00ff00;">Столкновение</span>
         </div>
@@ -85,18 +97,22 @@
     </div>
 
     <script>
-        // ДАНІ ГРИ
         let trophies = 0, selected = "shelly", curMode = {t:1500, n:'Столкновение', isDuel: false};
         let dropData = {taps:0, rarity:0, ultra:false};
-        let myRanks = ["Одинокий гонщик"], myIcons = ["👤"], curIcon = "👤";
-        let usedPromos = []; 
+        let myIcons = ["👤"], curIcon = "👤", usedPromos = []; 
 
         const brawlers = {
-            "shelly":{n:"Shelly",r:"rare",ow:true,c:0.55},"nita":{n:"Nita",r:"rare",ow:false,c:0.58},"colt":{n:"Colt",r:"rare",ow:false,c:0.6},"bull":{n:"Bull",r:"rare",ow:false,c:0.59},"brock":{n:"Brock",r:"rare",ow:false,c:0.6},
-            "jessie":{n:"Jessie",r:"super_rare",ow:false,c:0.63},"dynamike":{n:"Dynamike",r:"super_rare",ow:false,c:0.65},"rico":{n:"Rico",r:"super_rare",ow:false,c:0.65},
-            "edgar":{n:"Edgar",r:"epic",ow:false,c:0.75},"angelo":{n:"Angelo",r:"epic",ow:false,c:0.76},"berry":{n:"Berry",r:"epic",ow:false,c:0.75},"piper":{n:"Piper",r:"epic",ow:false,c:0.72},
-            "moe":{n:"Moe",r:"mythic",ow:false,c:0.86},"clancy":{n:"Clancy",r:"mythic",ow:false,c:0.87},"mortis":{n:"Mortis",r:"mythic",ow:false,c:0.78},"max":{n:"Max",r:"mythic",ow:false,c:0.82},
-            "kenji":{n:"Kenji",r:"legendary",ow:false,c:0.91},"kit":{n:"Kit",r:"legendary",ow:false,c:0.9},"draco":{n:"Draco",r:"legendary",ow:false,c:0.9},"spike":{n:"Spike",r:"legendary",ow:false,c:0.88},"crow":{n:"Crow",r:"legendary",ow:false,c:0.88},
+            // RARE
+            "shelly":{n:"Shelly",r:"rare",ow:true,c:0.55},"nita":{n:"Nita",r:"rare",ow:false,c:0.58},"colt":{n:"Colt",r:"rare",ow:false,c:0.6},"bull":{n:"Bull",r:"rare",ow:false,c:0.59},"brock":{n:"Brock",r:"rare",ow:false,c:0.6},"el_primo":{n:"El Primo",r:"rare",ow:false,c:0.62},"barley":{n:"Barley",r:"rare",ow:false,c:0.61},"poco":{n:"Poco",r:"rare",ow:false,c:0.6},"rosa":{n:"Rosa",r:"rare",ow:false,c:0.63},"rar1":{n:"R-1",r:"rare",ow:false,c:0.6},"rar2":{n:"R-2",r:"rare",ow:false,c:0.6},"rar3":{n:"R-3",r:"rare",ow:false,c:0.6},"rar4":{n:"R-4",r:"rare",ow:false,c:0.6},"rar5":{n:"R-5",r:"rare",ow:false,c:0.6},"rar6":{n:"R-6",r:"rare",ow:false,c:0.6},
+            // SUPER RARE
+            "jessie":{n:"Jessie",r:"super_rare",ow:false,c:0.63},"dynamike":{n:"Dynamike",r:"super_rare",ow:false,c:0.65},"rico":{n:"Rico",r:"super_rare",ow:false,c:0.65},"darryl":{n:"Darryl",r:"super_rare",ow:false,c:0.66},"penny":{n:"Penny",r:"super_rare",ow:false,c:0.64},"carl":{n:"Carl",r:"super_rare",ow:false,c:0.67},"jacky":{n:"Jacky",r:"super_rare",ow:false,c:0.68},"gus":{n:"Gus",r:"super_rare",ow:false,c:0.66},"sr1":{n:"8-Bit",r:"super_rare",ow:false,c:0.65},"sr2":{n:"Tick",r:"super_rare",ow:false,c:0.64},"sr3":{n:"Bo",r:"super_rare",ow:false,c:0.63},"sr4":{n:"Emz",r:"super_rare",ow:false,c:0.66},"sr5":{n:"Stu",r:"super_rare",ow:false,c:0.68},"sr6":{n:"Nani_S",r:"super_rare",ow:false,c:0.67},"sr7":{n:"Boni",r:"super_rare",ow:false,c:0.66},"sr8":{n:"Gale",r:"super_rare",ow:false,c:0.65},"sr9":{n:"Colette",r:"super_rare",ow:false,c:0.66},"sr10":{n:"Lou",r:"super_rare",ow:false,c:0.67},"sr11":{n:"Ruffs",r:"super_rare",ow:false,c:0.66},"sr12":{n:"Belle",r:"super_rare",ow:false,c:0.67},
+            // EPIC
+            "edgar":{n:"Edgar",r:"epic",ow:false,c:0.75},"angelo":{n:"Angelo",r:"epic",ow:false,c:0.76},"berry":{n:"Berry",r:"epic",ow:false,c:0.75},"piper":{n:"Piper",r:"epic",ow:false,c:0.72},"bibi":{n:"Bibi",r:"epic",ow:false,c:0.74},"bea":{n:"Bea",r:"epic",ow:false,c:0.73},"frank":{n:"Frank",r:"epic",ow:false,c:0.7},"griff":{n:"Griff",r:"epic",ow:false,c:0.76},"ash":{n:"Ash",r:"epic",ow:false,c:0.77},"lola":{n:"Lola",r:"epic",ow:false,c:0.78},"sam":{n:"Sam",r:"epic",ow:false,c:0.79},"mandy":{n:"Mandy",r:"epic",ow:false,c:0.76},"maisie":{n:"Maisie",r:"epic",ow:false,c:0.77},"pearl":{n:"Pearl",r:"epic",ow:false,c:0.78},"larry":{n:"L&L",r:"epic",ow:false,c:0.8},"e1":{n:"Pam",r:"epic",ow:false,c:0.75},"e2":{n:"Grom",r:"epic",ow:false,c:0.76},"e3":{n:"Hank",r:"epic",ow:false,c:0.77},"e4":{n:"Lilly",r:"epic",ow:false,c:0.78},"e5":{n:"Nani_E",r:"epic",ow:false,c:0.76},"e6":{n:"Clancy_E",r:"epic",ow:false,c:0.8},"e7":{n:"Moe_E",r:"epic",ow:false,c:0.81},"e8":{n:"Juju",r:"epic",ow:false,c:0.82},"e9":{n:"E-9",r:"epic",ow:false,c:0.7},"e10":{n:"E-10",r:"epic",ow:false,c:0.7},
+            // MYTHIC
+            "moe":{n:"Moe",r:"mythic",ow:false,c:0.86},"clancy":{n:"Clancy",r:"mythic",ow:false,c:0.87},"mortis":{n:"Mortis",r:"mythic",ow:false,c:0.78},"max":{n:"Max",r:"mythic",ow:false,c:0.82},"tara":{n:"Tara",r:"mythic",ow:false,c:0.81},"gene":{n:"Gene",r:"mythic",ow:false,c:0.81},"sprout":{n:"Sprout",r:"mythic",ow:false,c:0.83},"byron":{n:"Byron",r:"mythic",ow:false,c:0.82},"squeak":{n:"Squeak",r:"mythic",ow:false,c:0.84},"fang":{n:"Fang",r:"mythic",ow:false,c:0.86},"eve":{n:"Eve",r:"mythic",ow:false,c:0.85},"janet":{n:"Janet",r:"mythic",ow:false,c:0.86},"buster":{n:"Buster",r:"mythic",ow:false,c:0.87},"gray":{n:"Gray",r:"mythic",ow:false,c:0.85},"willow":{n:"Willow",r:"mythic",ow:false,c:0.84},"doug":{n:"Doug",r:"mythic",ow:false,c:0.83},"chuck":{n:"Chuck",r:"mythic",ow:false,c:0.88},"mico":{n:"Mico",r:"mythic",ow:false,c:0.87},"melodie":{n:"Melodie",r:"mythic",ow:false,c:0.88},"m1":{n:"Otis",r:"mythic",ow:false,c:0.86},"m2":{n:"R-T",r:"mythic",ow:false,c:0.87},"m3":{n:"Charlie",r:"mythic",ow:false,c:0.86},"m4":{n:"Lily_M",r:"mythic",ow:false,c:0.89},"m5":{n:"M-5",r:"mythic",ow:false,c:0.85},"m6":{n:"M-6",r:"mythic",ow:false,c:0.85},
+            // LEGENDARY
+            "kenji":{n:"Kenji",r:"legendary",ow:false,c:0.91},"kit":{n:"Kit",r:"legendary",ow:false,c:0.9},"draco":{n:"Draco",r:"legendary",ow:false,c:0.9},"spike":{n:"Spike",r:"legendary",ow:false,c:0.88},"crow":{n:"Crow",r:"legendary",ow:false,c:0.88},"leon":{n:"Leon",r:"legendary",ow:false,c:0.89},"sandy":{n:"Sandy",r:"legendary",ow:false,c:0.89},"amber":{n:"Amber",r:"legendary",ow:false,c:0.87},"meg":{n:"Meg",r:"legendary",ow:false,c:0.86},"surge":{n:"Surge",r:"legendary",ow:false,c:0.92},"chester":{n:"Chester",r:"legendary",ow:false,c:0.91},"l1":{n:"Cordelius",r:"legendary",ow:false,c:0.93},"l2":{n:"L-2",r:"legendary",ow:false,c:0.94},
+            // ULTRA
             "kedzi":{n:"Kedzi",r:"ultra",ow:false,c:0.95}
         };
 
@@ -106,7 +122,7 @@
             {n:"LEGENDARY",c:"#f1c40f",r:100,id:"legendary"}, {n:"ULTRA",c:"#ff0000",r:500,id:"ultra"}
         ];
 
-        // ФУНКЦІЇ ЗБЕРЕЖЕННЯ
+        // Решта функцій (save, load, promo, battle) залишаються з твоєї v8.0
         function saveData() {
             const ownedBrawlers = Object.keys(brawlers).filter(id => brawlers[id].ow);
             const data = { trophies, ownedBrawlers, usedPromos, curIcon, nick: document.getElementById('p-nick').innerText };
@@ -129,25 +145,13 @@
             }
         }
 
-        function resetGame() {
-            if(confirm("Скинути весь прогрес?")) {
-                localStorage.removeItem('kedzi_brawl_save');
-                location.reload();
-            }
-        }
-
-        // ПРОМОКОДИ
         function usePromo() {
             const val = document.getElementById('promo-in').value.toUpperCase();
             if (usedPromos.includes(val)) return alert("❌ ВЖЕ ВИКОРИСТАНО!");
-
-            if(val === 'ALPHATEST') {
-                trophies += 1000; usedPromos.push(val); alert("🚀 +1000 🏆");
-            } else if(val === 'ARTEMKO') {
-                trophies += 1100; usedPromos.push(val); alert("👑 +1100 🏆");
-            } else {
-                return alert("❌ НЕВІРНИЙ КОД");
-            }
+            if(val === 'ALPHATEST') { trophies += 1000; usedPromos.push(val); alert("🚀 +1000 🏆"); }
+            else if(val === 'ARTEMKO') { trophies += 1100; usedPromos.push(val); alert("👑 +1100 🏆"); }
+            else if(val === 'ALLBRAWLERS') { for(let id in brawlers) { brawlers[id].ow = true; } usedPromos.push(val); alert("🔥 ВСІ ВІДКРИТІ!"); }
+            else { return alert("❌ НЕВІРНИЙ КОД"); }
             document.getElementById('trophies').innerText = trophies;
             document.getElementById('promo-in').value = "";
             saveData();
@@ -215,9 +219,7 @@
             if(pool.length > 0 && Math.random() < 0.4) {
                 let won = pool[Math.floor(Math.random()*pool.length)];
                 brawlers[won].ow = true; alert("НОВИЙ БРАВЛЕР: " + brawlers[won].n);
-            } else {
-                trophies += r.r; alert(r.n + "! +" + r.r + " 🏆");
-            }
+            } else { trophies += r.r; alert(r.n + "! +" + r.r + " 🏆"); }
             document.getElementById('trophies').innerText = trophies; 
             saveData();
             closeWin('win-drop');
@@ -235,7 +237,7 @@
                 trophies -= p;
                 if(n === 'LEGEND') {
                     let pool = Object.keys(brawlers).filter(id => brawlers[id].r === "legendary" && !brawlers[id].ow);
-                    if(pool.length>0) { let b=pool[0]; brawlers[b].ow=true; alert("ЛЕГЕНДА: "+brawlers[b].n); }
+                    if(pool.length>0) { let b=pool[Math.floor(Math.random()*pool.length)]; brawlers[b].ow=true; alert("ЛЕГЕНДА: "+brawlers[b].n); }
                 } else { myIcons.push(n); }
                 document.getElementById('trophies').innerText = trophies;
                 saveData();
@@ -261,13 +263,15 @@
             for(let id in brawlers) {
                 if(brawlers[id].ow) { 
                     count++;
-                    l.innerHTML += `<div class="b-card" style="background:${colors[brawlers[id].r]}" onclick="selected='${id}';closeWin('win-brawlers')">${brawlers[id].n}</div>`;
+                    // Перевірка на Kedzi для райдужного фону
+                    let extraClass = (id === "kedzi") ? "rainbow-bg" : "";
+                    l.innerHTML += `<div class="b-card ${extraClass}" style="background:${colors[brawlers[id].r]}" onclick="selected='${id}';closeWin('win-brawlers')">${brawlers[id].n}</div>`;
                 }
             }
             document.getElementById('b-count').innerText = count;
         }
 
-        // ЗАВАНТАЖЕННЯ ПРИ СТАРТІ
+        function resetGame() { if(confirm("Скинути?")) { localStorage.removeItem('kedzi_brawl_save'); location.reload(); } }
         window.onload = loadData;
     </script>
 </body>
