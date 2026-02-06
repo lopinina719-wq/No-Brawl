@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KEDZI BRAWL v8.0</title>
+</head>
+<body style="margin:0; background:#000; color:#fff; font-family: 'Arial Black', sans-serif; text-align:center; overflow:hidden;">
+
+    <div onclick="openWin('win-profile')" style="background:#111; padding:12px; display:flex; justify-content:space-between; border-bottom:2px solid #ffcc00; cursor:pointer;">
+        <div style="display:flex; align-items:center; gap:10px;">
+            <div id="p-icon" style="font-size:24px;">👤</div>
+            <div style="text-align:left;">
+                <div id="p-nick" style="color:#ffcc00; font-size:16px;">Гравець</div>
+                <div id="p-rank" style="font-size:10px; color:#aaa;">Одинокий гонщик</div>
+            </div>
+        </div>
+        <div style="text-align:right;">
+            <div style="color:#ffcc00;">🏆 <span id="trophies">0</span></div>
+            <div id="selected-name" style="font-size:10px; color:#aaa;">SHELLY</div>
+        </div>
+    </div>
+
+    <div style="padding:20px;">
+        <h1 style="color:#ffcc00; font-size:28px; text-shadow: 2px 2px #444;">KEDZI BRAWL v8</h1>
+        <div style="background:#222; padding:8px; border-radius:10px; margin-bottom:15px; border: 1px solid #333;">
+            РЕЖИМ: <span id="cur-mode-txt" style="color:#00ff00;">Столкновение</span>
+        </div>
+
+        <button onclick="startBattle()" id="play-btn" style="background:#ffcc00; width:100%; padding:20px; font-size:24px; border:none; border-radius:20px; font-weight:bold; color:#000; margin-bottom:15px; cursor:pointer;">ГРАТИ</button>
+        
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:10px;">
+            <button onclick="openWin('win-modes')" style="background:#2ecc71; padding:15px; border-radius:12px; border:none; color:#000; font-weight:bold; grid-column: span 2;">ОБРАТИ РЕЖИМ</button>
+            <button onclick="openWin('win-brawlers')" style="background:#3498db; padding:15px; border-radius:12px; border:none; color:#fff; font-weight:bold;">БРАВЛЕРИ</button>
+            <button onclick="openWin('win-shop')" style="background:#e74c3c; padding:15px; border-radius:12px; border:none; color:#fff; font-weight:bold;">МАГАЗИН</button>
+            <button onclick="openStarrDrop()" style="background:#8e44ad; padding:15px; border-radius:12px; border:none; color:#fff; font-weight:bold; grid-column: span 2;">СТАР ДРОП (15 🏆)</button>
+        </div>
+    </div>
+
+    <style>
+        .window { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.98); z-index:100; padding:15px; overflow-y:auto; }
+        .content { background:#1a1a1a; padding:15px; border-radius:20px; border:2px solid #ffcc00; text-align:left; }
+        .close-btn { background:#ff4444; color:white; border:none; padding:15px; width:100%; border-radius:12px; margin-top:10px; font-weight:bold; cursor:pointer; }
+        .opt-btn { background:#333; color:white; border:1px solid #444; padding:12px; width:100%; margin:5px 0; border-radius:8px; display:flex; justify-content:space-between; align-items:center; cursor:pointer; }
+        .b-grid { display:grid; grid-template-columns: 1fr 1fr 1fr; gap:8px; }
+        .b-card { padding:10px; border-radius:8px; text-align:center; font-size:10px; font-weight:bold; cursor:pointer; border:1px solid rgba(255,255,255,0.1); }
+    </style>
+
+    <div id="win-modes" class="window"><div class="content"><h2>РЕЖИМИ</h2>
+        <button class="opt-btn" onclick="setMode(1500,'Столкновение',false)">🚀 Столкновение</button>
+        <button class="opt-btn" onclick="setMode(2000,'Нокаут',false)">⚔️ Нокаут</button>
+        <button class="opt-btn" onclick="setMode(10000,'👑 ДУЕЛЬ (x4)',true)" style="color:red; border:1px solid red;">👑 ДУЕЛЬ</button>
+    </div><button onclick="closeWin('win-modes')" class="close-btn">ЗАКРИТИ</button></div>
+
+    <div id="win-brawlers" class="window">
+        <h2 style="color:#ffcc00;">БРАВЛЕРИ (<span id="b-count">1</span>/99)</h2>
+        <div id="brawlers-list" class="b-grid"></div>
+        <button onclick="closeWin('win-brawlers')" class="close-btn">ЗАКРИТИ</button>
+    </div>
+
+    <div id="win-shop" class="window"><div class="content"><h2>МАГАЗИН</h2><div id="shop-items"></div></div><button onclick="closeWin('win-shop')" class="close-btn">ЗАКРИТИ</button></div>
+
+    <div id="win-profile" class="window"><div class="content"><h2>ПРОФІЛЬ</h2>
+        <p>НІК:</p><input type="text" id="nick-in" style="width:90%; padding:10px; background:#333; color:#fff; border-radius:8px;">
+        <p>ЗВАННЯ:</p><select id="rank-in" style="width:97%; padding:10px; background:#333; color:#fff; border-radius:8px;"></select>
+        <div id="icons-list" style="display:flex; gap:10px; margin-top:10px;"></div>
+        <button onclick="saveProfile()" class="close-btn" style="background:#2ecc71;">ЗБЕРЕГТИ</button>
+    </div><button onclick="closeWin('win-profile')" class="close-btn">ЗАКРИТИ</button></div>
+
+    <div id="win-drop" class="window">
+        <h1 id="drop-rarity" style="margin-top:40px; font-size:35px;">RARE</h1>
+        <div id="drop-box" onclick="tapDrop()" style="width:180px; height:180px; background:#fff; margin:30px auto; border:8px solid #fff; border-radius:40px; font-size:80px; display:flex; align-items:center; justify-content:center; transition:0.1s; cursor:pointer;">⭐</div>
+        <p id="drop-taps" style="font-size:18px;">ТАПАЙ! (4)</p>
+    </div>
+
+    <script>
+        let trophies = 0, selected = "shelly", curMode = {t:1500, n:'Столкновение', isDuel: false};
+        let dropData = {taps:0, rarity:0, ultra:false};
+        let myRanks = ["Одинокий гонщик"], myIcons = ["👤"], curIcon = "👤";
+
+        const brawlers = {
+            // Rare (Зелені)
+            "shelly":{n:"Shelly",r:"rare",ow:true,c:0.55},"nita":{n:"Nita",r:"rare",ow:false,c:0.58},"colt":{n:"Colt",r:"rare",ow:false,c:0.6},"bull":{n:"Bull",r:"rare",ow:false,c:0.59},"brock":{n:"Brock",r:"rare",ow:false,c:0.6},
+            // Super Rare (Сині)
+            "jessie":{n:"Jessie",r:"super_rare",ow:false,c:0.63},"dynamike":{n:"Dynamike",r:"super_rare",ow:false,c:0.65},"rico":{n:"Rico",r:"super_rare",ow:false,c:0.65},
+            // Epic (Фіолетові)
+            "edgar":{n:"Edgar",r:"epic",ow:false,c:0.75},"angelo":{n:"Angelo",r:"epic",ow:false,c:0.76},"berry":{n:"Berry",r:"epic",ow:false,c:0.75},"piper":{n:"Piper",r:"epic",ow:false,c:0.72},
+            // Mythic (Червоні)
+            "moe":{n:"Moe",r:"mythic",ow:false,c:0.86},"clancy":{n:"Clancy",r:"mythic",ow:false,c:0.87},"mortis":{n:"Mortis",r:"mythic",ow:false,c:0.78},"max":{n:"Max",r:"mythic",ow:false,c:0.82},
+            // Legendary (Жовті)
+            "kenji":{n:"Kenji",r:"legendary",ow:false,c:0.91},"kit":{n:"Kit",r:"legendary",ow:false,c:0.9},"draco":{n:"Draco",r:"legendary",ow:false,c:0.9},"spike":{n:"Spike",r:"legendary",ow:false,c:0.88},"crow":{n:"Crow",r:"legendary",ow:false,c:0.88},
+            // Ultra
+            "kedzi":{n:"Kedzi",r:"ultra",ow:false,c:0.95}
+        };
+
+        const rarities = [
+            {n:"RARE",c:"#00ff00",r:5,id:"rare"}, {n:"SUPER RARE",c:"#3498db",r:10,id:"super_rare"},
+            {n:"EPIC",c:"#9b59b6",r:20,id:"epic"}, {n:"MYTHIC",c:"#ff0000",r:50,id:"mythic"},
+            {n:"LEGENDARY",c:"#f1c40f",r:100,id:"legendary"}, {n:"ULTRA",c:"#ff0000",r:500,id:"ultra"}
+        ];
+
+        function openWin(id) { 
+            document.getElementById(id).style.display = 'block'; 
+            if(id==='win-shop') renderShop();
+            if(id==='win-profile') renderProfileOptions();
+            if(id==='win-brawlers') renderBrawlers();
+        }
+        function closeWin(id) { document.getElementById(id).style.display = 'none'; }
+
+        function setMode(time, name, duel) {
+            curMode = {t:time, n:name, isDuel:duel};
+            document.getElementById('cur-mode-txt').innerText = name;
+            document.getElementById('cur-mode-txt').style.color = duel ? "red" : "#00ff00";
+            closeWin('win-modes');
+        }
+
+        function startBattle() {
+            const btn = document.getElementById('play-btn'); btn.disabled = true; btn.innerText = "У БОЮ...";
+            setTimeout(() => {
+                let win = Math.random() < brawlers[selected].c;
+                if (curMode.isDuel) {
+                    if (win) { trophies = trophies===0?20:trophies*4; alert("🔥 ПЕРЕМОГА x4!"); }
+                    else { trophies = 0; alert("💀 КРАХ!"); }
+                } else {
+                    let rew = win ? 8 : -7; trophies = Math.max(0, trophies + rew);
+                    alert(win ? `+${rew} 🏆` : `${rew} 🏆`);
+                }
+                document.getElementById('trophies').innerText = trophies;
+                btn.disabled = false; btn.innerText = "ГРАТИ";
+            }, curMode.t);
+        }
+
+        function openStarrDrop() {
+            if(trophies<15) return alert("Треба 15🏆");
+            trophies-=15; document.getElementById('trophies').innerText = trophies;
+            dropData = {taps:4, rarity:0, ultra:false}; updateDropUI(); openWin('win-drop');
+        }
+
+        function tapDrop() {
+            if(dropData.taps > 0) {
+                let rnd = Math.random() * 100;
+                if(rnd < 5 && !dropData.ultra) { dropData.ultra = true; dropData.rarity = 5; }
+                else if(rnd < 30 && dropData.rarity < 4) dropData.rarity++;
+                dropData.taps--; updateDropUI();
+            } else finishDrop();
+        }
+
+        function updateDropUI() {
+            const r = rarities[dropData.rarity];
+            document.getElementById('win-drop').style.background = dropData.ultra ? "#000" : r.c;
+            document.getElementById('drop-rarity').innerText = r.n;
+            document.getElementById('drop-taps').innerText = "ТАПАЙ! (" + dropData.taps + ")";
+        }
+
+        function finishDrop() {
+            const r = rarities[dropData.rarity];
+            let won = null;
+            // ЛОГІКА: Випадає бравлер ТІЛЬКИ цієї рідкості
+            let pool = Object.keys(brawlers).filter(id => brawlers[id].r === r.id && !brawlers[id].ow);
+            
+            if(pool.length > 0 && Math.random() < 0.4) {
+                won = pool[Math.floor(Math.random()*pool.length)];
+                brawlers[won].ow = true; alert("НОВИЙ БРАВЛЕР: " + brawlers[won].n);
+            } else {
+                trophies += r.r; alert(r.n + "! +" + r.r + " 🏆");
+            }
+            document.getElementById('trophies').innerText = trophies; closeWin('win-drop');
+        }
+
+        function renderShop() {
+            const s = document.getElementById('shop-items'); s.innerHTML = "";
+            [{n:'🔥',p:50,t:'i'},{n:'LEGEND',p:1000,t:'r'}].forEach(item => {
+                s.innerHTML += `<div class="opt-btn" onclick="buyCos('${item.n}','${item.t}',${item.p})"><span>${item.n}</span> <span>${item.p}🏆</span></div>`;
+            });
+        }
+
+        function buyCos(n,t,p) {
+            if(trophies >= p) {
+                trophies -= p;
+                if(n === 'LEGEND') {
+                    let pool = Object.keys(brawlers).filter(id => brawlers[id].r === "legendary" && !brawlers[id].ow);
+                    if(pool.length>0) { let b=pool[0]; brawlers[b].ow=true; alert("ЛЕГЕНДА: "+brawlers[b].n); }
+                } else { myIcons.push(n); }
+                document.getElementById('trophies').innerText = trophies;
+            } else alert("Мало кубків!");
+        }
+
+        function renderProfileOptions() {
+            const rIn = document.getElementById('rank-in'); rIn.innerHTML = "<option>Новачок</option><option>LEGEND</option>";
+            const iL = document.getElementById('icons-list'); iL.innerHTML = "";
+            myIcons.forEach(i => iL.innerHTML += `<span onclick="curIcon='${i}'" style="font-size:30px; cursor:pointer;">${i}</span>`);
+        }
+
+        function saveProfile() {
+            document.getElementById('p-nick').innerText = document.getElementById('nick-in').value || "Гравець";
+            document.getElementById('p-icon').innerText = curIcon;
+            closeWin('win-profile');
+        }
+
+        function renderBrawlers() {
+            const l = document.getElementById('brawlers-list'); l.innerHTML = ""; let count = 0;
+            const colors = {rare:"#00ff00", super_rare:"#3498db", epic:"#9b59b6", mythic:"#ff0000", legendary:"#f1c40f", ultra:"#fff"};
+            for(let id in brawlers) {
+                if(brawlers[id].ow) { 
+                    count++;
+                    l.innerHTML += `<div class="b-card" style="background:${colors[brawlers[id].r]}" onclick="selected='${id}';closeWin('win-brawlers')">${brawlers[id].n}</div>`;
+                }
+            }
+            document.getElementById('b-count').innerText = count;
+        }
+    </script>
+</body>
+</html>
