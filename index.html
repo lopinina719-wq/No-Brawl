@@ -191,7 +191,7 @@
             const box = document.getElementById('drop-box');
             if(dropData.taps > 1) {
                 dropData.taps--;
-                if(Math.random() < 0.4) dropData.rarityIdx = Math.min(dropData.rarityIdx + 1, 5);
+                if(Math.random() < 0.6) dropData.rarityIdx = Math.min(dropData.rarityIdx + 1, 5);
                 updateDropUI();
                 box.classList.add('shake'); setTimeout(()=>box.classList.remove('shake'), 200);
             } else {
